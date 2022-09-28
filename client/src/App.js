@@ -1,21 +1,26 @@
 import Login from "./Components/Login";
 import React from "react";
-import ReactDOM from "react-dom";
 import Profile from "./Components/Profile";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { Routes, Route, Link, BrowserRouter } from "react-router-dom";
 export default function App() {
   return (
     <div>
-      <Router>
+      {/* <Router>
         <Switch>
-          <Route exact path="/login">
-            <Login />
+          <Route exact path="/">
+            <Route path="/login" element={<Login />} />
           </Route>
           <Route exact path="/profile">
             <Profile />
           </Route>
         </Switch>
-      </Router>
+      </Router> */}
+      <BrowserRouter>
+        <Routes>
+          <Route index element={<Login />} />
+          <Route path="/profile" element={<Profile />} />
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 }

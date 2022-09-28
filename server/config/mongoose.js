@@ -6,8 +6,7 @@
 // const db = mongoose.connection;
 // 
 // module.exports = db;
-
-const uri = 'mongodb://localhost:27017/test';
+const uri = 'mongodb+srv://amanpanwar:Aman123@cluster0.iyywu.mongodb.net/?retryWrites=true&w=majority';
 
 const options = {
     useNewUrlParser: true,
@@ -20,11 +19,3 @@ const options = {
     family: 4 // Use IPv4, skip trying IPv6
 }
 mongoose.connect(uri,options);
-const db = mongoose.connection;
-db.on("error", (err) => console.log(err));
-db.once(
-  "open",
-  console.error.bind("console", "sucessfully connected to database")
-);
-
-module.exports = db;

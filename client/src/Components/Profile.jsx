@@ -10,6 +10,7 @@ const socket = io.connect("http://localhost:8000");
 const Profile = () => {
   const [showchats, setshowchats] = useState(false);
   const [CurrentRoom, setRoom] = useState("");
+  const [currentitem,setCurrentItem] = useState({});
   return (
     <div style={{ height: "auto" }}>
       <Navbar>
@@ -23,7 +24,7 @@ const Profile = () => {
         </User>
       </Navbar>
       {showchats ? (
-        <BiddingRoom socket={socket} Room={CurrentRoom} />
+        <BiddingRoom socket={socket} Room={CurrentRoom} currentitem={currentitem} />
       ) : (
         <div style={{ background: "#f3f2ee", width: "auto" }}>
           <Container>
@@ -34,6 +35,7 @@ const Profile = () => {
                   socket={socket}
                   setshowchats={setshowchats}
                   setRoom={setRoom}
+                  setCurrentItem={setCurrentItem}
                 />
               );
             })}

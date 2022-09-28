@@ -4,6 +4,7 @@ const BidCard = (props) => {
   const Bidclickhandler = (e) => {
     e.preventDefault();
     props.setRoom(props.item.title);
+    props.setCurrentItem(props.item);
     props.socket.emit("join_room", props.item.title);
     props.setshowchats(true);
   };

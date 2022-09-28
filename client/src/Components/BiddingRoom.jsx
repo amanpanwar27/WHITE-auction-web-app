@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 const BiddingRoom = (props) => {
   const [message, setmessage] = useState("");
   const [chats, setchats] = useState([]);
+  const [showsold, setshowsold] = useState(false);
+  const [timer, settimer] = useState(60);
   const sendmessage = (e) => {
     e.preventDefault();
     const messagedetails = {
@@ -19,28 +21,85 @@ const BiddingRoom = (props) => {
     setchats((list) => [...list, message]);
     setmessage("");
   };
+  // const getmaxbid = async () => {
+  //   console.log("sajkdhkjasdhjk");
+  //   try {
+  //     await fetch("http://localhost:8000/getmaxbid", {
+  //       method: "POST",
+  //       mode:"no-cors",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: props.currentitem.title,
+  //     })
+  //       .then((res) => res.json())
+  //       .then((data) => {
+  //         console.log("*********", data);
+  //         setmaxbid(data.maxbid);
+  //       });
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // };
   useEffect(() => {
     props.socket.on("recieve_message", (data) => {
       setchats((list) => [...list, data.message]);
     });
   }, []);
+  const countertime = () => {
+    setInterval(() => {
+      if (timer === 0) {
+        setshowsold(true);
+      }
+      if (timer > 0) settimer(timer - 1);
+    }, 1000);
+  };
+  useEffect(() => {
+    countertime();
+  }, [timer]);
   return (
     <div>
       <Container>
         <Sidebar>
           <ItemDetails>
-            <span>images slides</span>
-            <span>highest bid price</span>
+            <span
+              style={{
+                fontSize: "40px",
+                textAlign: "center",
+                position: "relative",
+                bottom: "20px",
+              }}
+            >
+              {timer}
+            </span>
+            <span>
+              <img
+                src={props.currentitem.displayPicture}
+                style={{
+                  width: "200px",
+                  height: "200px",
+                  marginLeft: "30px",
+                }}
+              />
+              <span
+                style={{
+                  margin: "auto",
+                  fontWeight: "bold",
+                  paddingLeft: "30px",
+                }}
+              >
+                {props.currentitem.title}
+              </span>
+              <span></span>
+            </span>
+            <span>Opening Bid : {props.currentitem.OpeningBid}</span>
           </ItemDetails>
-          <Users>
-            <span>user1</span>
-            <span>user2</span>
-          </Users>
+          <Users>{showsold ? <span>Sold</span> : <span>UnSold</span>}</Users>
         </Sidebar>
         <Chats>
           <ChatArea>
             {chats.map((item) => {
-              return <span>{item}</span>;
+              return <span>{`${item}$`}</span>;
             })}
           </ChatArea>
           <SendingArea>
@@ -53,9 +112,27 @@ const BiddingRoom = (props) => {
               Send
             </button>
             <AmtButtons>
-              <button>+500</button>
-              <button>+2000</button>
-              <button>+5000</button>
+              <button
+                onClick={() => {
+                  setmessage(parseInt(message) + 500);
+                }}
+              >
+                +500
+              </button>
+              <button
+                onClick={() => {
+                  setmessage(parseInt(message) + 2000);
+                }}
+              >
+                +2000
+              </button>
+              <button
+                onClick={() => {
+                  setmessage(parseInt(message) + 5000);
+                }}
+              >
+                +5000
+              </button>
             </AmtButtons>
           </SendingArea>
         </Chats>
@@ -130,8 +207,9 @@ const ChatArea = styled.div`
   }
   span {
     height: 30px;
-    width: 90%;
-    background-color: red;
+    width: 80%;
+    background-color: lightblue;
+    border-radius: 10px;
     padding-left: 10px;
     padding-top: 5px;
     margin-left: 20px;
@@ -140,6 +218,11 @@ const ChatArea = styled.div`
 const Users = styled.div`
   display: flex;
   flex-direction: column;
+  & > span {
+    margin-bottom: 40px;
+    margin-left: 40%;
+    font-weight: bold;
+  }
 `;
 const Chats = styled.div`
   display: flex;
